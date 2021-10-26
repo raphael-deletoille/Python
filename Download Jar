@@ -1,0 +1,33 @@
+import urllib.request
+import os
+import sys
+
+path = ["databricks/", "spark-monitoring/"]
+full_path = "/dbfs/"
+
+for p in path:
+  full_path += p
+  if not os.path.exists(full_path):
+    try:
+      os.mkdir(full_path)
+    except OSError:
+      print("Creation of the directory %s failed" % full_path)
+    else:
+      print("Successfully created the directory %s " % full_path)
+  else:
+    print("%s already exist" % full_path)
+
+download_path = ["https://artifacts.st.com:443/artifactory/dit-mda-maven/acegisecurity/acegi-security/0.9.0/acegi-security-0.9.0.jar", "https://artifacts.st.com/artifactory/jcenter-maven-remote-cache/com/typesafe/config/1.4.1/config-1.4.1.jar"]
+jar_name     = ["acegisecurity/", "config/"]
+jar_location = "/dbfs/databricks/spark-monitoring/"
+
+for d in download_path:
+  for j in jar_name:
+    jar_location += j
+    try:
+      con = urllib.request.URLopener()
+      con.retrieve(download_path, jar_location)
+    except:
+      print("Unexpected error:", sys.exc_info()[0])
+    else:
+      print("Jar from " + jar_location + " downloaded at " + download_path)
